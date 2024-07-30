@@ -1,0 +1,60 @@
+# 우선순위 큐 사용
+from collections import deque
+
+def solution(operations):
+    queue = deque()
+
+    for operation in operations:
+        if operation.startswith("I "):
+            num = int(operation.split()[1])
+            queue.append(num)
+        elif operation == "D 1" and queue:
+            max_val = max(queue)
+            queue.remove(max_val)
+        elif operation == "D -1" and queue:
+            min_val = min(queue)
+            queue.remove(min_val)
+
+    if not queue:
+        return [0, 0]
+    else:
+        return [max(queue), min(queue)]
+
+#힙 사용
+import heapq
+
+def solution(operations):
+    min_heap = []
+    max_heap = []
+    entry_finder = {}  
+    counter = 0  
+
+    for operation in operations:
+        if operation.startswith("I "):
+            num = int(operation.split()[1])
+            heapq.heappush(min_heap, (num, counter))
+            heapq.heappush(max_heap, (-num, counter))
+            entry_finder[counter] = num
+            counter += 1
+        elif operation == "D 1" and max_heap:
+            while max_heap:
+                num, idx = heapq.heappop(max_heap)
+                if idx in entry_finder:
+                    del entry_finder[idx]
+                    break
+        elif operation == "D -1" and min_heap:
+            while min_heap:
+                num, idx = heapq.heappop(min_heap)
+                if idx in entry_finder:
+                    del entry_finder[idx]
+                    break
+    
+    while min_heap and min_heap[0][1] not in entry_finder:
+        heapq.heappop(min_heap)
+    while max_heap and max_heap[0][1] not in entry_finder:
+        heapq.heappop(max_heap)
+
+    if not min_heap or not max_heap:
+        return [0, 0]
+
+    return [-max_heap[0][0], min_heap[0][0]]
