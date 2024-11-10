@@ -1,26 +1,31 @@
-def solution(today, terms, privacies):
-    today_year, today_month, today_day = map(int, today.split('.'))
-    
-    term_dict = {}
-    for term in terms:
+def solution(relation):
+    today_year, today_month, today_day = map(int, "2022.05.19".split('.')) 
+
+    term_dict = {}  
+    for term in ["A 6", "B 12", "C 3"]:  
         t, months = term.split()
         term_dict[t] = int(months)
-    
-    expired_privacies = []
-    
-    for i, privacy in enumerate(privacies):
-        date_str, term_type = privacy.split()
-        year, month, day = map(int, date_str.split('.'))
-        
-        expiration_month = month + term_dict[term_type]
-        expiration_year = year + (expiration_month - 1) // 12 
-        expiration_month = (expiration_month - 1) % 12 + 1  
-        
-        expiration_day = day
-        
-        if (expiration_year < today_year) or \
-           (expiration_year == today_year and expiration_month < today_month) or \
-           (expiration_year == today_year and expiration_month == today_month and expiration_day < today_day):
-            expired_privacies.append(i + 1)  
-            
-    return expired_privacies
+
+    expired_privacies = []  
+
+    for i in range(1, 1 << len(relation[0])):  
+        tmp_set = set()
+
+        for j in range(len(relation)):
+            tmp = ''
+            for k in range(len(relation[0])):
+                if i & (1 << k):  
+                    tmp += str(relation[j][k])
+            tmp_set.add(tmp)  
+
+        if len(tmp_set) == len(relation):
+            not_duplicate = True
+            for num in expired_privacies:
+                if (num & i) == num:
+                    not_duplicate = False
+                    break
+            if not_duplicate:
+                expired_privacies.append(i)  
+
+    return len(expired_privacies)  
+
