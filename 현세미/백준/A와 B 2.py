@@ -1,5 +1,5 @@
 #백준 12919. A와 B 2
-
+#검색한 풀이...
 S = input().strip()
 T = input().strip()
 
