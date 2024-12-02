@@ -1,27 +1,33 @@
+from collections import defaultdict
+from bisect import bisect_left
+
 def solution(info, query):
-    result = []
+    data = defaultdict(list)
 
+    for i in info:
+        parts = i.split()
+        score = int(parts[-1])
+        attrs = parts[:-1]
+
+        # 모든 조건 조합 생성 
+        for a in [attrs[0], "-"]:
+            for b in [attrs[1], "-"]:
+                for c in [attrs[2], "-"]:
+                    for d in [attrs[3], "-"]:
+                        key = f"{a}-{b}-{c}-{d}"
+                        data[key].append(score)
+
+    for key in data:
+        data[key].sort()
+
+    results = []
     for q in query:
-        q_parts = q.replace(" and ", " ").split()
-        q_condition = q_parts[:-1]
-        q_score = int(q_parts[-1])
+        parts = q.replace(" and ", " ").split()
+        key = "-".join(parts[:-1])
+        score = int(parts[-1])
 
-        count = 0
+        scores = data[key]
+        idx = bisect_left(scores, score)
+        results.append(len(scores) - idx)
 
-        for i in info:
-            i_parts = i.split()
-            i_condition = i_parts[:-1]
-            i_score = int(i_parts[-1])
-
-            match = True
-            for j in range(4):
-                if q_condition[j] != "-" and q_condition[j] != i_condition[j]:
-                    match = False
-                    break
-
-            if match and i_score >= q_score:
-                count += 1
-
-        result.append(count)
-
-    return result
+    return results
