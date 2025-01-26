@@ -1,0 +1,32 @@
+import java.io.*;
+import java.util.Arrays;
+// 아직도 이해가 잘 안됨(한번 더 풀어야할 듯)
+public class Main {
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
+        int[] nums = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        int N = nums[0];
+        int M = nums[1];
+        int max = 0;
+        int[][] arr = new int[N][M];
+        int[][] result = new int[N][M];
+        for (int i = 0; i < N; i++) {
+            char[] line = br.readLine().toCharArray();
+            for (int j = 0; j < M; j++) {
+                arr[i][j] = Character.getNumericValue(line[j]);
+                result[i][j] = arr[i][j];
+                if (i >= 1 && j >= 1) {
+                    if (result[i - 1][j] > 0 && result[i - 1][j - 1] > 0 && result[i][j - 1] > 0
+                        && result[i][j] > 0) {
+                        int min = Math.min(result[i - 1][j],
+                            Math.min(result[i - 1][j - 1], result[i][j - 1]));
+                        result[i][j] = min + 1;
+                    }
+                }
+                max = Math.max(max, result[i][j]);
+            }
+        }
+        System.out.println(max * max);
+    }
+}
