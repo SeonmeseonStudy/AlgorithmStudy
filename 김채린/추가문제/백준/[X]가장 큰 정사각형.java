@@ -12,10 +12,11 @@ public class Main {
         int[][] arr = new int[N][M];
         int[][] result = new int[N][M];
         for (int i = 0; i < N; i++) {
-            char[] line = br.readLine().toCharArray();
+            arr[i] = Arrays.stream(br.readLine().split("")).filter(it-> !it.equals("")).mapToInt(Integer::parseInt).toArray();
+        }
+        for (int i=0; i<N; i++){
+            result[i] = arr[i];
             for (int j = 0; j < M; j++) {
-                arr[i][j] = Character.getNumericValue(line[j]);
-                result[i][j] = arr[i][j];
                 if (i >= 1 && j >= 1) {
                     if (result[i - 1][j] > 0 && result[i - 1][j - 1] > 0 && result[i][j - 1] > 0
                         && result[i][j] > 0) {
