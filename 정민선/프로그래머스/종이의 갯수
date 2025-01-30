@@ -1,0 +1,41 @@
+#1780 종이의 갯수
+count_minus1 = 0
+count_0 = 0
+count_1 = 0
+
+N = int(input())
+paper = [list(map(int, input().split())) for _ in range(N)]
+
+#같은 숫자인지 확인 
+
+def is_same_number(x, y, size):
+    first = paper[x][y]
+    for i in range(x, x + size):
+        for j in range(y, y + size):
+            if paper[i][j] != first:
+                return False
+    return True
+
+#분할 정복 
+def cut_paper(x, y, size):
+    global count_minus1, count_0, count_1
+    
+    if is_same_number(x, y, size):
+        if paper[x][y] == -1:
+            count_minus1 += 1
+        elif paper[x][y] == 0:
+            count_0 += 1
+        else:
+            count_1 += 1
+        return
+    
+    new_size = size // 3
+    for dx in range(3):
+        for dy in range(3):
+            cut_paper(x + dx * new_size, y + dy * new_size, new_size)
+
+cut_paper(0, 0, N)
+
+print(count_minus1)
+print(count_0)
+print(count_1)
