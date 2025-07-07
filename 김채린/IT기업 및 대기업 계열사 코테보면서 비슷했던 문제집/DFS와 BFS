@@ -1,0 +1,50 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int[] arr = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+		int[][] node = new int[arr[0]][arr[0]];
+		for(int i = 0; i < arr[1]; i++) {
+			int[] now = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+			node[now[0]-1][now[1]-1] = 1;
+			node[now[1]-1][now[0]-1] = 1;
+		}
+		boolean[] visited = new boolean[arr[0]];
+		visited[arr[2]-1] = true;
+		sol2(node, arr[2]-1, visited);
+		System.out.println();
+		sol1(node, arr[2]-1);
+	}
+
+	public static void sol1(int[][] node, int start) {
+		Queue<Integer> q = new LinkedList<>();
+		boolean[] visited = new boolean[node.length];
+		StringBuilder sb = new StringBuilder();
+		q.add(start);
+		sb.append(start+1).append(" ");
+		visited[start] = true;
+		while(!q.isEmpty()){
+			int now = q.poll();
+			for(int i = 0; i < node.length; i++) {
+				if(node[now][i] == 1&& !visited[i]) {
+					q.add(i);
+					sb.append(i+1).append(" ");
+					visited[i] = true;
+				}
+			}
+		}
+		System.out.println(sb.toString().trim());
+	}
+
+	public static void sol2(int[][] node, int start, boolean[] visited) {
+		System.out.print((start + 1) + " ");
+		for(int i = 0; i < node.length; i++) {
+			if(node[start][i] == 1 && !visited[i]) {
+				visited[i] = true;
+				sol2(node, i, visited);
+			}
+		}
+	}
+}
